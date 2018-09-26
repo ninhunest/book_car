@@ -5,5 +5,6 @@ class ActionDispatch::Routing::Mapper
 end
 
 Rails.application.routes.draw do
+  devise_for :users
   draw :api
 end
