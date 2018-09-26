@@ -2,15 +2,23 @@ class Api::V1::RolesController < Api::BaseController
   before_action :load_role, except: %i(index create)
 
   def index
-    roles = Role.select :id, :name
-
-    render json: {
+    if @current_user.role == 0
+      roles = Role.select :id, :name
+      render json: {
         status: 200,
         error: false,
         message: "",
         data: roles,
         total_pages: 0
       }, status: 200
+    else
+      render json: {
+        status: 500,
+        error: true,
+        message: "Bạn không có quyền",
+        data: nil
+      }, status: 500
+    end
   end
 
   def create
