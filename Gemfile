@@ -17,7 +17,7 @@ gem "rack-cors", require: "rack/cors"
 gem "devise"
 gem "simple_token_authentication"
 gem "jwt"
-
+gem "carrierwave", github: 'carrierwaveuploader/carrierwave'
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
 end

@@ -10,5 +10,6 @@ namespace :api, defaults: {format: "json"} do
     end
     resources :roles
     resources :users
+    resources :cars
   end
 end

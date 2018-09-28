@@ -1,58 +1,53 @@
-class Api::V1::RolesController < Api::BaseController
-  before_action :load_role, except: %i(index create)
+class Api::V1::CarsController < Api::BaseController
+  before_action :load_car, except: %i(index create)
 
   def index
-    if @current_user.role == 0
-      roles = Role.select :id, :name
-      render json: {
+    cars = Car.select :id, :bien_so
+    byebug
+    render json: {
         status: 200,
         error: false,
         message: "",
-        data: roles,
+        data: cars,
         total_pages: 0
       }, status: 200
-    else
-      render json: {
-        status: 500,
-        error: true,
-        message: "Bạn không có quyền",
-        data: nil
-      }, status: 500
-    end
   end
 
   def create
-    role = Role.new role_params
-    if role.save
+    car = Car.new car_params
+    if car.save
+      params[:car_photos]['photo'].each do |a|
+        car_photo = car.car_photos.create!(anh: a)
+      end
       render json: {
         status: 200,
         error: false,
         message: "",
-        data: role.load_structure
+        data: car.load_structure
       }, status: 200
     else
       render json: {
         status: 500,
         error: true,
-        message: role.errors.full_messages.to_sentence,
+        message: car.errors.full_messages.to_sentence,
         data: nil
       }, status: 500
     end
   end
 
   def update
-    if @role.update_attributes role_params
+    if @car.update_attributes car_params
       render json: {
         status: 200,
         error: false,
         message: "success",
-        data: @role.load_structure,
+        data: @car.load_structure,
       }, status: 200
     else
       render json: {
         status: 500,
         error: true,
-        message: @role.errors.full_messages.to_sentence,
+        message: @car.errors.full_messages.to_sentence,
         data: nil
       }, status: 500
     end
@@ -77,19 +72,19 @@ class Api::V1::RolesController < Api::BaseController
   end
 
   private
-  def load_role
-    @role = Role.find_by id: params[:id]
+  def load_car
+    @car = Car.find_by id: params[:id]
 
-    return if @role
+    return if @car
     render json: {
       status: 404,
       error: true,
-      message: "role not exist",
+      message: "car not exist",
       data: nil
     }, status: 404
   end
 
-  def role_params
-    params.require(:role).permit :name
+  def car_params
+    params.require(:car).permit :bien_so, :so_cho, car_photos_attributes: [:id, :car_id, :anh]
   end
 end
